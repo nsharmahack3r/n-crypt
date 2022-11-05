@@ -1,0 +1,11 @@
+Backend
+Frontend
+
+
+Backend APIs:
+    1. Authentication
+    2. Fetch Message
+    3. Send Message
+    4. Search User on profile ID
+    5. Delete Message
+    6. Delete User/Account => Email cannot be reused.
