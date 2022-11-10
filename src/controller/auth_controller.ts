@@ -2,8 +2,10 @@ import { Request, Response, NextFunction } from "express";
 import { UserInfo, userInfo } from "os";
 import User from "../models/user_model";
 import bcrypt from "bcrypt";
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken'
+import * as dotenv from "dotenv";
 
+dotenv.config();
 class AuthController{
     static async login(req: Request, res: Response, next: NextFunction){
         const {email, password} = req.body;
@@ -14,7 +16,7 @@ class AuthController{
         if(user){
             const validPassword = await bcrypt.compare(password, user.password);
             if(validPassword){
-                const userJwt = jwt.sign({...user.toJSON}, process.env.TOKEN_SECRET);
+                const userJwt = jwt.sign({...user.toJSON} , process.env.TOKEN_SECRET as string);
                 res.cookie('jwt', userJwt, {
                     maxAge: 9000000000,
                     httpOnly: false,
@@ -36,6 +38,7 @@ class AuthController{
             res.status(400).json({error:"Bad Request"});
         }
 
+
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -45,7 +48,7 @@ class AuthController{
         });
         user.save();
 
-        const userJwt = jwt.sign({...user.toJSON}, process.env.TOKEN_SECRET);
+        const userJwt = jwt.sign({...user.toJSON}, process.env.TOKEN_SECRET as string);
         res.cookie('jwt', userJwt, {
             maxAge: 9000000000,
             httpOnly: false,
