@@ -37,6 +37,10 @@ class AuthController{
         if(!email || !password){
             res.status(400).json({error:"Bad Request"});
         }
+        if(password.length? password.length < 8 : false){
+            return res.status(400).json({error:"Please enter at least 8 charcater password"});
+        }
+
 
 
         const salt = await bcrypt.genSalt(10);

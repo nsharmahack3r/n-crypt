@@ -5,6 +5,10 @@ interface IUser {
   email: string;
   password: string;
   avatar?: string;
+  otp?: string;
+  lastActive?:string;
+  active?:boolean;
+  createdAt?:string;
 }
 const userSchema = new Schema<IUser>({
   email: { 
@@ -16,13 +20,27 @@ const userSchema = new Schema<IUser>({
   password:{
     type: String,
     required: [true, "Please enter your password"],
-    minlength: [8, "Your password must be longer than 8 characters"],
     select: false,
   },
   avatar: {
     type: String, 
     required: false
-  }
+  },
+  otp:{
+    type: String,
+    required: true
+  },lastActive: {
+    type: String,
+    required: false,
+  },
+  active: {
+    type: Boolean,
+    default: false,
+  },
+  createdAt: {
+    type: String,
+    default: new Date().toISOString(),
+  },
 });
 
 const User = model<IUser>('User', userSchema);
