@@ -28,7 +28,7 @@ const userSchema = new Schema<IUser>({
   },
   otp:{
     type: String,
-    required: true
+    required: false
   },lastActive: {
     type: String,
     required: false,
