@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import express, { Express, json, NextFunction, Request, Response } from "express";
 import 'dotenv/config'
 import router from './routes/index';
+import { privateEncrypt } from "crypto";
 
 const port = process.env.PORT;
 const dbUri = `${process.env.DB_URI}`;
