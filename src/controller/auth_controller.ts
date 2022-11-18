@@ -59,7 +59,7 @@ class AuthController{
             });
             await user.save();
 
-            const userJwt = jwt.sign({...user.toJSON}, "${process.env.TOKEN_SECRET}");
+            const userJwt = jwt.sign({...user.toJSON}, `${process.env.TOKEN_SECRET}`);
             res.cookie('jwt', userJwt, {
                 maxAge: 9000000000,
                 httpOnly: false,
