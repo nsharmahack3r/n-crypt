@@ -8,6 +8,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 class AuthController{
     static async login(req: Request, res: Response, next: NextFunction){
+       try{
         const {email, password} = req.body;
         if(!email || !password){
             return res.status(400).json({error:"Bad Request"});
@@ -23,42 +24,51 @@ class AuthController{
                     secure: false,
                 });
 
-                return res.json({jwt: userJwt, user});
+                return res.json({jwt: userJwt, user}
+                );
             } else {
                 return res.status(401).json({error:"Password incorrect"});
             }
         } else {
             return res.status(404).json({error:"User not found"});
         }
+
+       }catch(e){
+            return res.status(404).json({error:"An error occured"});
+       }
     }
 
     static async signUp(req: Request, res: Response, next: NextFunction){
-        const {email, password} = req.body;
-        if(!email || !password){
-            res.status(400).json({error:"Bad Request"});
+        try{
+            const {email, password} = req.body;
+            if(!email || !password){
+                res.status(400).json({error:"Bad Request"});
+            }
+            if(password.length? password.length < 8 : false){
+                return res.status(400).json({error:"Please enter at least 8 charcater password"});
+            }
+
+
+
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+
+            const user = new User({
+                email,
+                password: hashedPassword
+            });
+            await user.save();
+
+            const userJwt = jwt.sign({...user.toJSON}, "${process.env.TOKEN_SECRET}");
+            res.cookie('jwt', userJwt, {
+                maxAge: 9000000000,
+                httpOnly: false,
+                secure: false,
+            });
+            return res.json({jwt: userJwt, user});
+        }catch(e){
+            res.status(400).json({error:"User Already Exists!"});
         }
-        if(password.length? password.length < 8 : false){
-            return res.status(400).json({error:"Please enter at least 8 charcater password"});
-        }
-
-
-
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-
-        const user = new User({
-            email,
-            password: hashedPassword
-        });
-        user.save();
-
-        const userJwt = jwt.sign({...user.toJSON}, process.env.TOKEN_SECRET as string);
-        res.cookie('jwt', userJwt, {
-            maxAge: 9000000000,
-            httpOnly: false,
-            secure: false,
-        });
-        return res.json({jwt: userJwt, user});
     }
 }
 
