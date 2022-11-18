@@ -20,27 +20,26 @@ const userSchema = new Schema<IUser>({
   password:{
     type: String,
     required: [true, "Please enter your password"],
-    select: false,
   },
   avatar: {
     type: String, 
     required: false
   },
-  otp:{
-    type: String,
-    required: false
-  },lastActive: {
-    type: String,
-    required: false,
-  },
-  active: {
-    type: Boolean,
-    default: false,
-  },
-  createdAt: {
-    type: String,
-    default: new Date().toISOString(),
-  },
+  // otp:{
+  //   type: String,
+  //   required: false
+  // },lastActive: {
+  //   type: String,
+  //   required: false,
+  // },
+  // active: {
+  //   type: Boolean,
+  //   default: false,
+  // },
+  // createdAt: {
+  //   type: String,
+  //   default: new Date().toISOString(),
+  // },
 });
 
 const User = model<IUser>('User', userSchema);
