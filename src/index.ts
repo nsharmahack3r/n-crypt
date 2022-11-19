@@ -4,8 +4,7 @@ import router from './routes/index';
 import { privateEncrypt } from "crypto";
 import Error from './middlewares/error';
 
-const path = require('path'); 
-require('dotenv').config({ path: path.join(__dirname, '.env') });
+import 'dotenv/config'
 
 const port = process.env.PORT;
 const dbUri = `${process.env.DB_URI}`;
