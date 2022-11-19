@@ -3,6 +3,7 @@ import express, { Express, json, NextFunction, Request, Response } from "express
 import 'dotenv/config'
 import router from './routes/index';
 import { privateEncrypt } from "crypto";
+import Error from './middlewares/error';
 
 const port = process.env.PORT;
 const dbUri = `${process.env.DB_URI}`;
@@ -13,6 +14,8 @@ app.use(express.urlencoded({ extended: false }));
 /** Takes care of JSON data */
 app.use(express.json());
 
+/** using errorhandler */
+app.use(Error.Errors);
 /** RULES OF OUR API */
 app.use((req, res, next) => {
   // set the CORS policy
@@ -30,9 +33,15 @@ app.use((req, res, next) => {
   console.log('=>', req.method, req.url, req.hostname);
   next();
 });
+//handling uncaught exceptions
+process.on("uncaughtException", (err) => {
+  console.log(`ERROR: ${err.message}`);
+  console.log("Shutting down due to uncaught exception");
+  process.exit(1);
+});
 
 app.use("/",router);
-app.listen(port,()=>{
+const server = app.listen(port,()=>{
     console.log(`Running on http://localhost:${port}`);
 });
 mongoose.connect(dbUri)
@@ -42,6 +51,16 @@ mongoose.connect(dbUri)
   .catch((err) => {
     console.log(err);
   });
+
+  //unhandled promise rejections
+process.on("unhandledRejection", (err:string,) => {
+  console.log(`Shutting down server for: ${err}`);
+  console.log("Shutting down server due to unhandled promise rejection");
+  server.close(() => {
+    process.exit(1);
+  });
+});
+
 
 // Mobile platform no support gun.js
 // 1. GUN.onMessage => Socket callback => Mobile device + Server Load. + App should be up and running on mobile
