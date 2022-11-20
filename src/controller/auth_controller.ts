@@ -40,9 +40,9 @@ class AuthController{
 
     static async signUp(req: Request, res: Response, next: NextFunction){
         try{
-            const {email, password} = req.body;
-            if(!email || !password){
-                res.status(400).json({error:"Bad Request"});
+            const {email, password, username, name} = req.body;
+            if(!email || !password || !username || !name){
+                return res.status(400).json({error:"Bad Request"});
             }
             if(password.length? password.length < 8 : false){
                 return res.status(400).json({error:"Please enter at least 8 charcater password"});
@@ -55,7 +55,9 @@ class AuthController{
 
             const user = new User({
                 email,
-                password: hashedPassword
+                password: hashedPassword,
+                username,
+                name
             });
             await user.save();
 
