@@ -9,8 +9,8 @@ dotenv.config();
 class AuthController{
     static async login(req: Request, res: Response, next: NextFunction){
        try{
-        const {email, password} = req.body;
-        if(!email || !password){
+        const {email, password, fcmToken} = req.body;
+        if(!email || !password || !fcmToken){
             return res.status(400).json({error:"Bad Request"});
         }
         const user:any = await User.findOne({email:email});
@@ -24,8 +24,13 @@ class AuthController{
                     secure: false,
                 });
 
-                return res.json({jwt: userJwt, user}
-                );
+                user.fcmToken = fcmToken;
+                user.save();
+
+                return res.json({
+                    jwt: userJwt, 
+                    user
+                });
             } else {
                 return res.status(401).json({error:"Password incorrect"});
             }
@@ -40,8 +45,8 @@ class AuthController{
 
     static async signUp(req: Request, res: Response, next: NextFunction){
         try{
-            const {email, password, username, name} = req.body;
-            if(!email || !password || !username || !name){
+            const {email, password, username, name, fcmToken} = req.body;
+            if(!email || !password || !username || !name || !fcmToken){
                 return res.status(400).json({error:"Bad Request"});
             }
             if(password.length? password.length < 8 : false){
@@ -57,7 +62,8 @@ class AuthController{
                 email,
                 password: hashedPassword,
                 username,
-                name
+                name,
+                fcmToken
             });
             await user.save();
 
