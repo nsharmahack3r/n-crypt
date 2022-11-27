@@ -4,11 +4,13 @@ import validator from 'validator';
 interface IUser {
   email: string;
   password: string;
-  avatar?: string;
-  otp?: string;
+  name: string;
+  username: string;
+  avatar?: string
   lastActive?:string;
   active?:boolean;
   createdAt?:string;
+  fcmToken?:string;
 }
 const userSchema = new Schema<IUser>({
   email: { 
@@ -21,10 +23,23 @@ const userSchema = new Schema<IUser>({
     type: String,
     required: [true, "Please enter your password"],
   },
+  name: { 
+    type: String,
+    required: [true, "Please enter your name"],
+  },
+  username: { 
+    type: String,
+    required: [true, "Please enter your username"],
+    unique: true,
+  },
   avatar: {
     type: String, 
     required: false
   },
+  fcmToken: {
+    type: String, 
+    required: false
+  }
   // otp:{
   //   type: String,
   //   required: false
