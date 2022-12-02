@@ -74,15 +74,9 @@ class AuthController{
 
 static async signUp(req: Request, res: Response, next: NextFunction){
         try{
-<<<<<<< HEAD
-            const {email, password} = req.body;
-            if(!email || !password){
-=======
             const {email, password, username, name, fcmToken} = req.body;
-            if(!email || !password || !username || !name || !fcmToken){
->>>>>>> f974f66449247dda2635c4d109a6348219499a36
+            if(!email || !password || !username || !name || !fcmToken)
                 return res.status(400).json({error:"Bad Request"});
-            }
             if(password.length? password.length < 8 : false){
                 return res.status(400).json({error:"Please enter at least 8 charcater password"});
             }
