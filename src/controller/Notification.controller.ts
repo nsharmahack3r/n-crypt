@@ -10,7 +10,7 @@ admin.initializeApp({
 
 
 class NotificationHandler {
-    static async notify(fcmToken:string, title:string, body:string){
+    static async notify(fcmToken:string, title:string, body:string, data:any){
         const notificationTag: string = 'native_notification';
 
         // const androidConfig: admin.messaging.AndroidNotification = {
@@ -27,6 +27,7 @@ class NotificationHandler {
                 title,
                 body
             },
+            data:data,
             apns: {
                 payload: {
                     aps: {
@@ -54,7 +55,11 @@ class NotificationHandler {
         const title = `@${from.username}`;
         const fcmToken = `${to.fcmToken}`;
 
-        await NotificationHandler.notify(fcmToken, title, message);
+        const data = {
+            sender:`${from._id}`,
+            message: message,
+        }
+        await NotificationHandler.notify(fcmToken, title, message, data);
     }
 }
 
