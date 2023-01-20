@@ -13,13 +13,12 @@ class NotificationHandler {
     static async notify(fcmToken:string, title:string, body:string, data:any){
         const notificationTag: string = 'native_notification';
 
-        // const androidConfig: admin.messaging.AndroidNotification = {
-        //     priority: 'max', 
-        //     channelId: "DEFAULT_CHANNEL",
-        //     clickAction:"FLUTTER_NOTIFICATION_CLICK",
-        //     visibility:'public',
-        //     tag: notificationTag
-        // };
+        const androidNotification: admin.messaging.AndroidNotification = {
+            channelId: "DEFAULT_CHANNEL",
+            clickAction:"FLUTTER_NOTIFICATION_CLICK",
+            visibility:'public',
+            tag: notificationTag
+        };
 
         const message = {
             token: fcmToken,
@@ -43,7 +42,11 @@ class NotificationHandler {
                     "apns-topic": "io.flutter.plugins.firebase.messaging",
                     'apns-collapse-id': notificationTag,
                 },
-              },
+            },
+            android:{
+                notification:androidNotification
+            }
+                      
         };
 
         admin.messaging().send(message).then((messageID)=>{
@@ -58,8 +61,22 @@ class NotificationHandler {
         const data = {
             sender:`${from._id}`,
             message: message,
+            sentAt: new Date(Date.now()).toISOString(),
+            receiver: `${to._id}`,
+
+
+            //User params
+            _id: `${from._id}`,
+            name: `${from.name}`,
+            username:`${from.username}`,
+            email:`${from.email}`
+
         }
-        await NotificationHandler.notify(fcmToken, title, message, data);
+        try{
+            await NotificationHandler.notify(fcmToken, title, message, data);
+        } catch(e){
+            console.log(e);
+        }
     }
 }
 
