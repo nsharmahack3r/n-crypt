@@ -7,3 +7,5 @@ package-lock.json
 data.json/
 
 build/
+
+src/server-key.json

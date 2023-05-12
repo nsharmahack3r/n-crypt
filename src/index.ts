@@ -38,15 +38,14 @@ app.use((req, res, next) => {
 
 //socket io server starts here
 
-
-
 app.use("/",router);
-app.listen(port,()=>{
-    console.log(`Running on http://localhost:${port}`);
-});
-mongoose.connect(dbUri)
+mongoose.set('strictQuery',true);
+mongoose.connect(dbUri,)
 .then(() => {
-    console.log("Connected to MongoDB", dbUri);
+    console.log("Connected to MongoDB Atlas");
+    app.listen(port,()=>{
+      console.log(`Running on http://localhost:${port}`);
+  });
   })
   .catch((err) => {
     console.log(err);
