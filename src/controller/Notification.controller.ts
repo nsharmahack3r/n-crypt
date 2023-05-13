@@ -17,9 +17,9 @@ class NotificationHandler {
             channelId: "DEFAULT_CHANNEL",
             clickAction:"FLUTTER_NOTIFICATION_CLICK",
             visibility:'public',
+            priority: 'max',
             tag: notificationTag
         };
-
         const message = {
             token: fcmToken,
             notification:{
@@ -43,9 +43,9 @@ class NotificationHandler {
                     'apns-collapse-id': notificationTag,
                 },
             },
-            android:{
-                notification:androidNotification
-            }
+            // android:{
+            //     notification:androidNotification
+            // }
                       
         };
 
