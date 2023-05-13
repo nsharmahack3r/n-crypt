@@ -37,7 +37,7 @@ app.use((req, res, next) => {
 });
 
 //socket io server starts here
-
+app.get("/", (req,res)=>res.send("N-crypt up and running!"))
 app.use("/",router);
 mongoose.set('strictQuery',true);
 mongoose.connect(dbUri,)
