@@ -25,6 +25,29 @@ class MessageController{
             return res.status(404).json({error:"Failed to send message"});
         }
     }
+    
+    static async sendCallNotification(req: Request, res: Response, next: NextFunction){
+        try{
+            const { from, to, message } = req.body;
+
+            console.log(req.body);
+            if(!from || !to || !message){
+                return res.status(404).json({error:"Bad Reques"});
+            }
+            
+            const sender = await User.findById(from);
+            const receiver = await User.findById(to);
+
+            if(!sender || !receiver) {
+                return res.status(404).json({error:"Bad Request"});
+            }
+            
+            await NotificationHandler.sendCallNotification(sender, receiver, `${message}`, "voice");
+            return res.status(200).json({success:true});
+        } catch(e){
+            return res.status(404).json({error:"Failed to send message"});
+        }
+    }
 }
 
 export default MessageController;

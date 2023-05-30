@@ -78,6 +78,32 @@ class NotificationHandler {
             console.log(e);
         }
     }
+
+    static async sendCallNotification(from:any, to:any, message:string, callType:string){
+        const title = `@${from.username}`;
+        const fcmToken = `${to.fcmToken}`;
+
+        const data = {
+            caller:`${from._id}`,
+            type:callType,
+            sentAt: new Date(Date.now()).toISOString(),
+            receiver: `${to._id}`,
+
+
+            //User params
+            _id: `${from._id}`,
+            name: `${from.name}`,
+            username:`${from.username}`,
+            email:`${from.email}`,
+            avatar:`${from.avatar}`,
+
+        }
+        try{
+            await NotificationHandler.notify(fcmToken, title, message, data);
+        } catch(e){
+            console.log(e);
+        }
+    }
 }
 
 export default NotificationHandler;
